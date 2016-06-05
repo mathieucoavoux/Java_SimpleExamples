@@ -30,6 +30,8 @@ class transformObject {
 				return myHashObject;
 			}
 		};
+		System.out.println("**********************");
+		System.out.println("Single Chained element :");
 		//This is creating a new Transformer array with a single Transformer object
 		Transformer[] chainSingleElement = new Transformer[] { tranObject };
 		//Creating a Transformer chain based on array created before
@@ -55,5 +57,60 @@ class transformObject {
 				System.out.println(e);
 			}
 		}
+		System.out.println("**********************");
+		System.out.println("\n");
+		System.out.println("**********************");
+		System.out.println("Two Chained elements :");
+		//Create a new Transformer which increment the Hascode by 1
+		Transformer incrObject = new Transformer() {
+			public Object transform(Object input) {
+				//Get the hashcode field;
+				try {
+					//Get the Hashcode field
+					Field fieldHash = input.getClass().getDeclaredField("Hashcode");
+					//Get the Hashcode value
+					Object vObjectHash = fieldHash.get(input);
+					//Cast to integer
+					int myIncHash = Integer.parseInt(vObjectHash.toString());
+					//Increment by 1
+					myIncHash++;
+					//Create a new HashTransaction object
+					HashTransaction twoHash = new HashTransaction();
+					//Set the id
+					twoHash.setId(2);
+					//Set the new hashcode
+					twoHash.setHashcode(myIncHash);
+					return twoHash;
+				}catch(Exception e){
+					return (new Integer(1));
+				}
+			}
+		};
+		//Create a second chain with 2 elements
+		Transformer[] chainTwoElements = new Transformer[] { tranObject,incrObject };
+		//Creating a Transformer chain based on array created before
+		Transformer chain2 = new ChainedTransformer( chainTwoElements );
+		//Transform myTransaction and store result into an object
+		Object result2 = chain2.transform(myTransaction);
+		//Get All Fields stored into object
+		Field[] fTrCh2Object = FieldUtils.getAllFields(result2.getClass());
+		//Foreach fields...
+		for(int indTrCh2Object = 0;indTrCh2Object < fTrCh2Object.length;indTrCh2Object++) {
+			//Print the name of the field
+			System.out.println("Name of field["+indTrCh2Object+"] :"+fTrCh2Object[indTrCh2Object].toString());
+			//Store the current field into a Field variable
+			Field twoField = fTrCh2Object[indTrCh2Object];
+			//This is mandatory
+			try {
+				//Store the value of current field into an object
+				Object value2 = twoField.get(result2);
+				//Print object value
+				System.out.println("Field "+fTrCh2Object[indTrCh2Object].toString()+" value :"+value2.toString());
+			}catch(Exception e) {
+				//Print exceptions if any occured
+				System.out.println(e);
+			}
+		}
+		System.out.println("**********************");
 	}
 }
