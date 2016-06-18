@@ -16,6 +16,9 @@ public class Payment {
 	public void setBank(String myBank) {
 		Bank = myBank;
 	}
+	public String getAnswer(String myAnswer) {
+		return myAnswer;
+	}
 	public Payment() {
 		setIdPayment(1);
 	}
